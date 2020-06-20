@@ -1,0 +1,22 @@
+Movement Map
+
+0x0001           land
+0x0002           coast (corner?)
+0x0011           dirt
+0x0040           water
+0x0081           forest and mountains
+0x0082           coast
+0x008d           walls (crashes if not really a wall)
+0x0000           bridge (land, navy, air)
+0x0fxx           space (nothing)
+0x02xx           cave (no flying units allowed)
+
+
+Action Map
+
+0x0000           water
+0x4000           land
+0xfaff           island (no trans, no land)
+0xfbff           wall
+0xfdff           mountains
+0xfeff           forest

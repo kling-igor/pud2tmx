@@ -1,0 +1,11 @@
+syntax: glob
+
+# Mac OS X
+*.DS_Store
+ 
+.idea/*
+
+node_modules/*
+
+dist/*
+

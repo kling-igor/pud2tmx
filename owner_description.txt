@@ -1,0 +1,9 @@
+0x00             passive computer
+0x01             computer
+0x02             passive computer
+0x03             nobody
+0x04             computer
+0x05             human
+0x06             rescue (passive)
+0x07             rescue (active)
+0x08 - 0xff      passive computer

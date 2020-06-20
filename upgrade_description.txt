@@ -1,0 +1,19 @@
+word            use default data (0 no, 1 yes)
+52 bytes        upgrade time
+52 words        gold cost
+52 words        lumber cost
+52 words        oil cost
+52 words        upgrade icon
+52 words        group applies to
+52 longs        Affect flags (What does the upgrade give)
+
+
+
+upgrades 0x33......:
+   Time...........: 250
+   Gold...........: 4000
+   Lumber.........: 0
+   Oil............: 0
+   Icon...........: 108
+   Group..........: 0x13
+   Flags..........: 00000000000010000000000000000000

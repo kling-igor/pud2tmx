@@ -1,0 +1,2 @@
+0x00             human
+0x01             orc

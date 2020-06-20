@@ -1,0 +1,7 @@
+restrictions:
+Units and buildings allowed. (Allow Units)
+Spell you start with. (Startup Spells)
+Spell allowed to research. (Allow Spells)
+Spell currently researching (Searching Spells - only good for save file).
+Upgrade allowed. (Upgrades Allowed)
+Upgrade currently being acquired. (Searching Upgrades - only good for save file)

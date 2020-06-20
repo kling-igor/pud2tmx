@@ -1,0 +1,92 @@
+Unit 0x00.........: Footman
+   Overlap........: 0      overlap frames
+   Sight..........: 4      sight range (can be 0 through 9)
+   Hit Points.....: 60     hp
+   Build Time.....: 60     build time (6 = 1 sec.)
+   Gold Cost......: 60     1/10 gold cost
+   Lumber Cost....: 0      1/10 lumber cost
+   Oil Cost.......: 0      1/10 oil cost
+   Width..........: 1      unit size
+   Height.........: 1      unit size
+   Box Width......: 31     box size
+   Box Height.....: 31     box size
+   Range..........: 1      attack range
+   Cptr react rg..: 6      react range (computer)
+   Hmn reac rg....: 4      react range (human)
+   Armor..........: 2      armor
+   Priority.......: 60     priority (the higher, the fewer)
+   Basic Dmg......: 6      basic damage
+   Piercing Dmg...: 3      piercing damage
+   Missile........: 29     (none)
+   Type...........: 0      unit type (0 land, 1 fly, 2 naval) only changes appearance
+   Decay Rate.....: 0      decay rate (dies in rate * 6 secs time, 0 never decays) only applies to units you build or create via spell
+   Annoy..........: 0      Annoy computer factor
+   Mouse 2 Btn....: 1      2nd mouse button action
+   Point Value....: 50     point value for killing unit
+   Can Target.....: 1      can target (1 land, 2 sea, 4 air, OR together) - some missiles can't hit air units
+   Rect Sel.......: 1      selectable via rectangle (0 no, 1 yes)
+   Has Magic......: 0      magic (0 no, 1 yes)
+   Weapons Ugrd...: 1      weapons upgradable (0 no, 1 yes)
+   Armor Ugrd.....: 1      armor upgradable (0 no, 1 yes)
+   Flags..........: 00001000000010000000000000000001
+
+Flags
+                     bit 0: Land unit
+                     bit 1: Air unit
+                     bit 2: Explode when killed (used on catapult)
+                     bit 3: Sea unit
+                     bit 4: Critter
+                     bit 5: Is a building
+                     bit 6: Is a submarine
+                     bit 7: Can see submarine
+                     bit 8: Is a peon
+                     bit 9: Is a tanker
+                     bit10: Is a transport
+                     bit11: Is a place to get oil
+                     bit12: Is a storage for gold
+                     bit13: Not used
+                     bit14: Can ground attack (only applies to catapult and ships)
+                     bit15: Is undead (exorcism work on them)
+                     bit16: Is a Shore building
+                     bit17: Can cast spell
+                     bit18: Is a storage for wood
+                     bit19: Can attack
+                     bit20: Is a tower
+                     bit21: Is an oil patch
+                     bit22: Is a mine
+                     bit23: Is a hero
+                     bit24: Is a storage for oil
+                     bit25: Is invisibility/unholy armor kill this unit
+                     bit26: Is this unit act like a mage
+                     bit27: Is this unit organic (spells)
+                     bit28: not used
+                     bit29: not used
+                     bit30: not used
+                     bit31: not used
+
+
+2nd mouse button action:
+   0x01 attack
+   0x02 move
+   0x03 harvest
+   0x04 haul oil
+   0x05 demolish
+   0x06 sail
+
+
+missile weapon:
+   0x00    lightning
+   0x01    griffon hammer
+   0x02    dragon breath
+   0x03    flame shield
+   0x07    big cannon
+   0x0a    touch of death
+   0x0d    catapult rock
+   0x0e    ballista bolt
+   0x0f    arrow
+   0x10    axe
+   0x11    submarine missile
+   0x12    turtle missile
+   0x18    small cannon
+   0x1b    demon fire
+   0x1d    none
