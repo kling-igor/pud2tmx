@@ -4,22 +4,19 @@
   "description": "WCII level data extractor",
   "main": "dist/index.js",
   "scripts": {
-    "build": "babel src/ -d dist/ -s --watch"
+    "start": "node -r @babel/register src/index.js"
   },
   "dependencies": {
     "babel-polyfill": "^6.23.0",
     "path": "^0.12.7"
   },
   "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-core": "^6.22.1",
-    "babel-loader": "^6.2.10",
-    "babel-preset-es2015": "^6.22.0",
-    "babel-preset-stage-2": "^6.24.1"
-  },
-  "repository": {
-    "type": "hg",
-    "url": "https://bitbucket.org/KlingI/level-parser"
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "7.4.0",
+    "@babel/plugin-transform-runtime": "^7.10.3",
+    "@babel/preset-env": "7.4.2",
+    "@babel/register": "^7.0.0",
+    "@babel/runtime": "^7.4.3"
   },
   "author": "Igor Kling <kling.igor@gmail.com>",
   "private": true,
