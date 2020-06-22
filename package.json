@@ -4,7 +4,7 @@
   "description": "WCII level data extractor",
   "main": "dist/index.js",
   "scripts": {
-    "start": "node -r @babel/register src/index.js"
+    "start": "ts-node src/index.js"
   },
   "dependencies": {
     "babel-polyfill": "^6.23.0",
@@ -13,10 +13,16 @@
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "7.4.0",
+    "@babel/node": "^7.10.3",
     "@babel/plugin-transform-runtime": "^7.10.3",
     "@babel/preset-env": "7.4.2",
+    "@babel/preset-typescript": "^7.10.1",
     "@babel/register": "^7.0.0",
-    "@babel/runtime": "^7.4.3"
+    "@babel/runtime": "^7.4.3",
+    "@types/node": "^14.0.13",
+    "babel-node": "0.0.1-security",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.5"
   },
   "author": "Igor Kling <kling.igor@gmail.com>",
   "private": true,

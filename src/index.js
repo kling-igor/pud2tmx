@@ -49,15 +49,28 @@ let currentUnitDescription;
 const upgradesDescription = {};
 let currentUpgradeDescription;
 
+const owners = {};
+const sides = {};
+
+const gold = {};
+const lumber = {};
+const oil = {};
+
 const parsers = [rootParser];
 
 rl.on('line', (line) => {
   const parser = parsers[parsers.length - 1] || rootParser;
-  parser(line);
+  try {
+    parser(line);
+  } catch (e) {
+    console.error(e);
+  }
 });
 
 rl.on('close', () => {
   exportTMXMap(`${mapFile}.tmx`);
+
+  console.log(JSON.stringify(mapUnits));
 });
 
 // http://cade.datamax.bg/war2x/pudspec.html
@@ -108,8 +121,117 @@ function rootParser(line) {
     parsers.push(upgradeSectionParser);
   } else if (line.match(/^Unit Data/)) {
     parsers.push(unitsDataSectionParser);
+  } else if (line.match(/^Owners\.*:/)) {
+    parsers.push(ownersParser);
+  } else if (line.match(/^Sides\.*:/)) {
+    parsers.push(sidesParser);
+  } else if (line.match(/^Starting\sGold.\.*:/)) {
+    parsers.push(goldParser);
+  } else if (line.match(/^Starting\sLumber.\.*:/)) {
+    parsers.push(lumberParser);
+  } else if (line.match(/^Starting\sOil.\.*:/)) {
+    parsers.push(oilParser);
   }
 }
+
+function ownersParser(line) {
+  if (!line.includes('player') && !line.includes('unusable') && !line.includes('neutral')) {
+    parsers.pop();
+    const parser = parsers[parsers.length - 1] || rootParser;
+    return parser(line);
+  }
+
+  const owner = {
+    ['0']: 'passive_computer',
+    ['1']: 'computer',
+    ['2']: 'passive_computer',
+    ['3']: 'nobody',
+    ['4']: 'computer',
+    ['5']: 'user',
+    ['6']: 'passive_rescue',
+    ['7']: 'active_rescue',
+    ['8']: 'passive_computer',
+  };
+
+  if (line.includes('player')) {
+    const [, player, value] = line.match(/\s*player\s(\d)\.*:\s0x0(\d*)/);
+    owners[parseInt(player) - 1] = owner[value];
+  } else if (line.includes('neutral')) {
+    const [, value] = line.match(/\s*neutral\.*:\s0x0(\d*)/);
+    owners[8] = owner[value];
+  }
+}
+
+function sidesParser(line) {
+  if (!line.includes('player') && !line.includes('unusable') && !line.includes('neutral')) {
+    parsers.pop();
+    const parser = parsers[parsers.length - 1] || rootParser;
+    return parser(line);
+  }
+
+  const side = {
+    ['0']: 'human',
+    ['1']: 'orc',
+    ['2']: 'neutral',
+  };
+
+  if (line.includes('player')) {
+    const [, player, value] = line.match(/\s*player\s(\d)\.*:\s0x0(\d*)/);
+    sides[parseInt(player) - 1] = side[value];
+  } else if (line.includes('neutral')) {
+    const [, value] = line.match(/\s*neutral\.*:\s0x0(\d*)/);
+    sides[8] = side[value];
+  }
+}
+
+function goldParser(line) {
+  if (!line.includes('player') && !line.includes('unusable') && !line.includes('neutral')) {
+    parsers.pop();
+    const parser = parsers[parsers.length - 1] || rootParser;
+    return parser(line);
+  }
+
+  if (line.includes('player')) {
+    const [, player, value] = line.match(/\s*player\s(\d)\.*:\s(\d*)/);
+    gold[parseInt(player) - 1] = value;
+  } else if (line.includes('neutral')) {
+    const [, value] = line.match(/\s*neutral\.*:\s(\d*)/);
+    gold[8] = value;
+  }
+}
+
+function lumberParser(line) {
+  if (!line.includes('player') && !line.includes('unusable') && !line.includes('neutral')) {
+    parsers.pop();
+    const parser = parsers[parsers.length - 1] || rootParser;
+    return parser(line);
+  }
+
+  if (line.includes('player')) {
+    const [, player, value] = line.match(/\s*player\s(\d)\.*:\s(\d*)/);
+    lumber[parseInt(player) - 1] = value;
+  } else if (line.includes('neutral')) {
+    const [, value] = line.match(/\s*neutral\.*:\s(\d*)/);
+    lumber[8] = value;
+  }
+}
+
+function oilParser(line) {
+  if (!line.includes('player') && !line.includes('unusable') && !line.includes('neutral')) {
+    parsers.pop();
+    const parser = parsers[parsers.length - 1] || rootParser;
+    return parser(line);
+  }
+
+  if (line.includes('player')) {
+    const [, player, value] = line.match(/\s*player\s(\d)\.*:\s(\d*)/);
+    oil[parseInt(player) - 1] = value;
+  } else if (line.includes('neutral')) {
+    const [, value] = line.match(/\s*neutral\.*:\s(\d*)/);
+    oil[8] = value;
+  }
+}
+
 /**
  * Парсер секции данных о тайлах карты
  * */
@@ -218,7 +340,7 @@ function unitDescriptionParser(line) {
     // 1 - active
     // this * 2500 - запасы рудника или нефти
   } else {
-    if (currentMapUnit.position && currentMapUnit.type && currentMapUnit.owner) {
+    if (currentMapUnit.position && currentMapUnit.type != null && currentMapUnit.owner != null) {
       mapUnits.push(currentMapUnit);
     }
 
@@ -437,25 +559,26 @@ function exportTMXMap(fileName) {
   }
 
   // собираем слои объектов
-  for (let i = 8; i >= 0; i--) {
+  for (let i = 0; i <= 8; i++) {
     const layer = layerObjects[i];
     const layerTemplate =
       layer.length > 0
-        ? `  <objectgroup color="${objectLayersData[i].color}" name="${objectLayersData[i].name}">
-      <properties>
-      <property name="agent" value="user"/>
-      <property name="allowSpells" value="11111111111111111111111111111111"/>
-      <property name="allowUnits" value= "11111111111111111111111111111111"/>
-      <property name="allowUpgrades" value="11111111111111111111111111111111"/>
-      <property name="gold" type="int" value="5000"/>
-      <property name="lumber" type="int" value="5000"/>
-      <property name="oil" type="int" value="5000"/>
-      <property name="race" value="human"/>
-      </properties>
-      ${layer.join('\n ')}
-    </objectgroup>
+        ? `
+  <objectgroup color="${objectLayersData[i].color}" name="${objectLayersData[i].name}">
+    <properties>
+    <property name="agent" value="${owners[i]}"/>
+    <property name="allowSpells" value="11111111111111111111111111111111"/>
+    <property name="allowUnits" value="11111111111111111111111111111111"/>
+    <property name="allowUpgrades" value="11111111111111111111111111111111"/>
+    <property name="gold" type="int" value="${gold[i]}"/>
+    <property name="lumber" type="int" value="${lumber[i]}"/>
+    <property name="oil" type="int" value="${oil[i]}"/>
+    <property name="race" value="${sides[i]}"/>
+    </properties>
+  ${layer.join('\n ')}
+  </objectgroup>
 `
-        : `  <objectgroup color="${objectLayersData[i].color}" name="${objectLayersData[i].name}" visible="0"/>`;
+        : `<objectgroup color="${objectLayersData[i].color}" name="${objectLayersData[i].name}" visible="0"/>`;
 
     objectLayers += `${layerTemplate}\n`;
   }
