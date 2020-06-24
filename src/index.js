@@ -34,6 +34,7 @@ const movementMapSource = [];
 
 const actionMapSource = [];
 
+let description = '';
 let mapDimension;
 let era;
 let transcodeTable;
@@ -82,6 +83,11 @@ function rootParser(line) {
     parsers.push(actionMapParser);
   } else if (line.match(/^Movement Map/)) {
     parsers.push(movementMapParser);
+  } else if (line.match(/^Description/)) {
+    const descriptionMatch = line.match(/^Description\.*:\s(\w*)/);
+    if (descriptionMatch) {
+      description = descriptionMatch[1];
+    }
   } else if (line.match(/^Era/)) {
     const eraMatch = line.match(/^Era\.*:\s(\w*)/);
     if (eraMatch) {
@@ -589,6 +595,7 @@ function exportTMXMap(fileName) {
   }" tilewidth="32" tileheight="32" nextobjectid="1">
     <properties>
       <property name="era" value="${era.toLowerCase()}"/>
+      <property name="description" value="${description}"/>
     </properties>
   <tileset firstgid="1" source="${tilesetName}"/>
   <tileset firstgid="404" source="colors_tileset.tsx"/>
