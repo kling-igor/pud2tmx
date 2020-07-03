@@ -70,8 +70,6 @@ rl.on('line', (line) => {
 
 rl.on('close', () => {
   exportTMXMap(`${mapFile}.tmx`);
-
-  console.log(JSON.stringify(mapUnits));
 });
 
 // http://cade.datamax.bg/war2x/pudspec.html
@@ -84,7 +82,7 @@ function rootParser(line) {
   } else if (line.match(/^Movement Map/)) {
     parsers.push(movementMapParser);
   } else if (line.match(/^Description/)) {
-    const descriptionMatch = line.match(/^Description\.*:\s(\w*)/);
+    const descriptionMatch = line.match(/^Description\.*:\s(.*)/);
     if (descriptionMatch) {
       description = descriptionMatch[1];
     }
@@ -341,6 +339,12 @@ function unitDescriptionParser(line) {
       currentMapUnit.owner = parseInt(ownerMatch[1], 16);
     }
   } else if (line.match(/\s*Alter/)) {
+    if (currentMapUnit.type === '5c' || currentMapUnit.type === '5d') {
+      const alterMatch = line.match(/\s*Alter\.*:\s([0-9]*)/);
+      if (alterMatch) {
+        currentMapUnit.alter = parseInt(alterMatch[1], 10);
+      }
+    }
     // do nothing
     // 0 - passive
     // 1 - active
@@ -539,7 +543,7 @@ function exportTMXMap(fileName) {
     if (!unitTypes.has(unit.type)) {
       console.log(`NO DATA FOR ${unit.type} in unitTypes ${unit}`);
       for (const key in unit) {
-        console.log(`${key} = ${unit.key}`);
+        // console.log(`${key} = ${unit.key}`);
       }
       continue;
     }
@@ -551,9 +555,15 @@ function exportTMXMap(fileName) {
 
     const type = unitTypes.get(unit.type).symbol;
 
-    const object = `    <object id="${id}" name="${name}" type="${type}" x="${unit.position.x * 32}" y="${unit.position.y * 32}" width="${w * 32}" height="${
+    const properties = unit.alter
+      ? `\n      <properties>
+        <property name="capacity" type="int" value="${unit.alter}"/>
+      </properties>\n    `
+      : '';
+
+    const object = `   <object id="${id}" name="${name}" type="${type}" x="${unit.position.x * 32}" y="${unit.position.y * 32}" width="${w * 32}" height="${
       h * 32
-    }"></object>`;
+    }">${properties}</object>`;
 
     if (unit.owner > 7) {
       layerObjects[8].push(object);
